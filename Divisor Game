@@ -1,0 +1,43 @@
+//https://leetcode.com/problems/divisor-game/
+
+class Solution {
+    public boolean divisorGame(int n) {
+        return n%2==0;
+    }
+}
+
+// simple recursion
+public boolean divisorGame(int n) {
+        for(int x=1; x < n; x++)
+            if(n % x == 0 && !divisorGame(n-x)) //if Bob fails, Alice wins
+                return true;
+        return false;
+    }
+}
+ 
+ // dp solution
+ class Solution {
+    public boolean divisorGame(int n) {
+        return aliceWins(n, new Boolean[n + 1], true);
+    }
+    
+    private boolean aliceWins(int n, Boolean[] cache, boolean aliceTurn) {
+        if (n == 1) {
+            // Alice wins iff it's not her turn at n==1
+            return !aliceTurn;
+        }
+        
+        if (cache[n] != null) {
+            return cache[n];
+        }
+        
+        // Check all divisors
+        for (int x = 1; x * x <= n; x++) {
+            if (n % x == 0 && aliceWins(n - x, cache, aliceTurn ^ true)) {
+                return cache[n] = true;
+            }
+        }
+        
+        return cache[n] = false;
+    }
+}
